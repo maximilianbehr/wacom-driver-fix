@@ -53,7 +53,7 @@ First make sure that the Wacom driver is not loaded by running this command in T
     
 Now download the patched driver here:
 
-https://github.com/thenickdude/wacom-driver-fix/releases/download/5.3.7-6-patch/PenTabletDriver-5.3.7-6-patched.zip
+https://github.com/thenickdude/wacom-driver-fix/releases/download/5.3.7-6-patch-2/wacom-5.3.7-6-macOS-patched.zip
 
 Unzip it by double clicking it, and you'll get a file called "PenTabletDriver". In Finder, click "Go -> Go to Folder" 
 (or press Command + Shift + G), then paste this path in the pop-up window, and click Ok:
@@ -63,11 +63,18 @@ Unzip it by double clicking it, and you'll get a file called "PenTabletDriver". 
 You should see a file already in there called "PenTabletDriver". Move the new PenTabletDriver file from the zip file
 in there to replace it, confirm that you want to overwrite it, then enter your login password to confirm.
 
-Back in the terminal, run:
+**If your tablet also supports touch**, you have one more fix to install. Click Go -> Go to Folder and jump here:
+
+    /Library/Application Support/Tablet/PenTabletDriver.app/Contents/Resources/ConsumerTouchDriver.app/Contents/MacOS
+
+Replace the "ConsumerTouchDriver" file you see in that folder with the one from the zip file, and enter your password to 
+confirm.
+
+**Now we're done installing the fixes,** so we'll load the fixed tablet driver. Back in the terminal, run:
 
     launchctl load /Library/LaunchAgents/com.wacom.pentablet.plist
 
-Now your tablet driver should be operational and you should be able to use the Wacom preference pane in System 
+Your tablet driver should be operational and you should be able to use the Wacom preference pane in System 
 Preferences.
 
 If your tablet still isn't working, double check that in System Preferences -> Security & Privacy -> Accessibility, 
@@ -129,3 +136,5 @@ This kills the driver.
 
 The patch is a single-byte change which replaces the call to `_objc_release()` in `PathFromURL` to a call to `_objc_retain()`.
 This prevents the path from being freed before it is used, which cures the segfault.
+
+The ConsumerTouchDriver also contains this same bug, and the patch is the same there.
